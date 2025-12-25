@@ -13,8 +13,7 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: process.env.NODE_ENV === 'production' ? '/sv-port' : '',
-			assets: 'https://github.com/BaiduNano/sv-port/blob/gh-pages'
+			base: process.env.NODE_ENV === 'production' ? '/sv-port' : ''
 		}
 	}
 };
