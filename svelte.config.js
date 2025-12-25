@@ -14,7 +14,7 @@ const config = {
 		}),
 		paths: {
 			base: process.env.NODE_ENV === 'production' ? '/sv-port' : '',
-			assets: 'https://github.com/BaiduNano/sv-port/tree/gh-pages'
+			assets: 'https://github.com/BaiduNano/sv-port/blob/gh-pages'
 		}
 	}
 };
