@@ -1,0 +1,1 @@
+import{f as o,a as r}from"../chunks/CAKiwHfA.js";import"../chunks/CARMwjOT.js";import{p,t as m,a as s}from"../chunks/a28di6U2.js";import{s as i,l as f}from"../chunks/B6xh-y0E.js";import{i as n}from"../chunks/C7uDXmpH.js";var l=o('<meta http-equiv="refresh"/>');function g(a,e){p(e,!1),n();var t=l();m(()=>i(t,"content",`0; url=${f.vgen}`)),r(a,t),s()}export{g as component};
