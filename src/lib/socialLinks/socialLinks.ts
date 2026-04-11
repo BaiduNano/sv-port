@@ -8,4 +8,4 @@ export const links = {
   vgen: "https://vgen.co/baidunano",
 };
 export const name = "BaiduNano";
-export const email = "baidunano@proton.me";
+export const email = "baidunano@gmail.com";
