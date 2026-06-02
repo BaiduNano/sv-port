@@ -1,5 +1,5 @@
 <script lang="ts">
-	import portrait from '$lib/assets/portrait/portrait.png';
+	import portrait from '$lib/assets/portrait/portrait.webp';
 	import { name } from '$lib/socialLinks/socialLinks';
 </script>
 
