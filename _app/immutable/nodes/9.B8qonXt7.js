@@ -1,1 +1,0 @@
-import{f as e,a as o}from"../chunks/CAKiwHfA.js";import"../chunks/CARMwjOT.js";import{p,t as m,a as s}from"../chunks/a28di6U2.js";import{s as i,l as f}from"../chunks/C4HsK8ah.js";import{i as n}from"../chunks/C7uDXmpH.js";var l=e('<meta http-equiv="refresh"/>');function b(a,r){p(r,!1),n();var t=l();m(()=>i(t,"content",`0; url=${f.twitter}`)),o(a,t),s()}export{b as component};

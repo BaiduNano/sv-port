@@ -1,1 +1,0 @@
-import{f as r,a as e}from"../chunks/CAKiwHfA.js";import"../chunks/CARMwjOT.js";import{p,t as m,a as s}from"../chunks/a28di6U2.js";import{s as f,l as i}from"../chunks/C4HsK8ah.js";import{i as n}from"../chunks/C7uDXmpH.js";var l=r('<meta http-equiv="refresh"/>');function b(a,o){p(o,!1),n();var t=l();m(()=>f(t,"content",`0; url=${i.fanbox}`)),e(a,t),s()}export{b as component};

@@ -1,1 +1,0 @@
-import{f as a,a as e}from"../chunks/CAKiwHfA.js";import"../chunks/CARMwjOT.js";var r=a('<meta http-equiv="refresh" content="0; url=https://www.youtube.com/watch?v=dQw4w9WgXcQ"/>');function n(t){var o=r();e(t,o)}export{n as component};
