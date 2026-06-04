@@ -1,1 +1,6 @@
 @import "./theme.css";
+@layer base {
+    h1 {
+        @apply font-bold text-center text-3xl pt-1;
+    }
+}

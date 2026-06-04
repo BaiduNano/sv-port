@@ -27,12 +27,15 @@
     });
 </script>
 
+{#if visible}
+    <p transition:fly={{ y: 10, duration: 800 }}>Contact</p>
+{/if}
 <span class="flex flex-row gap-2">
     {#each contact as c, i}
         {#if visible}
             <div
                 class="relative flex flex-col justify-center items-center group text-3xl"
-                in:fly={{ y: 20, duration: 800, delay: i * 100 }}
+                transition:fly={{ y: 20, duration: 800, delay: i * 100 }}
             >
                 <!-- Loading Bar -->
                 {#if c.icon.startsWith("nf-") && !fontsLoaded}
@@ -44,12 +47,12 @@
                 {#if !c.name}
                     <i class="nf {c.icon} relative" aria-hidden="true"></i>
                 {:else}
-                    <!-- Icon and button -->
+                    <!-- Icon button -->
                     <a
                         href={c.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="duration-200 bg-base-100 p-2 pl-3 pr-3 rounded-box shadow-xl border-2 border-transparent group-hover:bg-base-200 group-hover:border-secondary group-hover:text-secondary"
+                        class="duration-200 bg-base-100 p-2 pl-3 pr-3 rounded-box shadow-xl border-2 border-transparent group-hover:bg-base-200 group-hover:border-secondary group-hover:text-secondary group-hover:-translate-y-px group-active:translate-y-px"
                         aria-label={c.name}
                     >
                         <i
