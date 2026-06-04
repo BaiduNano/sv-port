@@ -1,0 +1,1 @@
+const t={pixiv:"https://www.pixiv.net/en/users/120853451",twitter:"https://x.com/baidunano",fanbox:"https://baidunano.fanbox.cc/",itchio:"https://baidunano.itch.io/",github:"https://github.com/BaiduNano",vgen:"https://vgen.co/baidunano"},n="BaiduNano";export{t as l,n};
