@@ -9,7 +9,7 @@
     class="absolute inset-0 flex justify-center h-full text-lg flex-col items-center gap-2"
 >
     <Portrait />
-    <div class="h-16"></div>
+    <div class="h-12"></div>
     <Contact />
     <div class="h-8"></div>
     <ViewPorto />

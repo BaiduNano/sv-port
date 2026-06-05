@@ -2,6 +2,7 @@
     import { links } from "$lib/socialLinks/socialLinks";
     import { onMount } from "svelte";
     import { fly } from "svelte/transition";
+    import SpinningAnim from "$lib/components/spinningAnim.svelte";
 
     const contact = [
         { icon: "icon-pixiv", name: "Pixiv", url: links.pixiv },
@@ -39,9 +40,7 @@
             >
                 <!-- Loading Bar -->
                 {#if c.icon.startsWith("nf-") && !fontsLoaded}
-                    <div
-                        class="absolute inset-0 m-auto h-7 w-7 border-2 border-base-content border-t-transparent rounded-full animate-spin opacity-50"
-                    ></div>
+                    <SpinningAnim />
                 {/if}
                 <!-- triple dot -->
                 {#if !c.name}

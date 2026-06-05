@@ -11,5 +11,6 @@
         src="https://media.tenor.com/S4rDip1aAJsAAAAj/troll-hehe.gif"
         alt=""
         width="64"
+        transition:fly={{ y: 10, duration: 800, delay: 10 }}
     />
 </div>

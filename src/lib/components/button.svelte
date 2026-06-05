@@ -6,6 +6,8 @@
         type = "button",
         small = false,
         primary = true,
+        roundedFull = false,
+        ignoreHover = false,
         onclick,
         children,
         class: classNameProp,
@@ -22,9 +24,11 @@
 
 {#if visible}
     <button
-        class="z-10 duration-200 rounded-selector border-2
+        class="z-10 duration-200 border-2 {roundedFull
+            ? 'rounded-full'
+            : 'rounded-selector'}
         shadow-xl flex flex-row gap-2 justify-center items-center w-auto cursor-pointer hover:bg-base-200
-        hover:-translate-y-px active:translate-y-px p-2
+        {!ignoreHover ? 'hover:-translate-y-px active:translate-y-px' : ''}
         {primary
             ? 'bg-base-300 border-primary text-primary hover:text-secondary hover:border-secondary'
             : 'bg-base-100 border-transparent hover:text-secondary hover:border-secondary'}

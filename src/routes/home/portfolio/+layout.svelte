@@ -6,9 +6,9 @@
 <span class="absolute top-0 left-0 p-8 text-sm z-1">
     <a
         href="/home"
-        class="duration-200 rounded-selector border-2 shadow-xl cursor-pointer
+        class="duration-200 rounded-selector shadow-xl cursor-pointer
         hover:-translate-y-px active:translate-y-px hover:bg-base-200
-        bg-base-300 border-primary text-primary hover:text-secondary hover:border-secondary
+        bg-base-100 text-base-content hover:text-secondary hover:border-secondary border-2 border-transparent
         p-2 pl-4 pr-4 flex flex-row gap-2 items-center"
         transition:fly={{ y: -10, duration: 500 }}
     >
