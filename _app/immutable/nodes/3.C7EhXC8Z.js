@@ -1,4 +1,4 @@
-import{f as n,a as p}from"../chunks/DqwdjAYE.js";import{f as i,c as l,r as f,s as c}from"../chunks/Bj4ImJvj.js";import{s as m}from"../chunks/CEbYl7ga.js";import{t as d,f as h}from"../chunks/CSLT6X_c.js";var b=n(`<span class="absolute top-0 left-0 p-8 text-sm z-1"><a href="/home" class="duration-200 rounded-selector shadow-xl cursor-pointer
+import{f as n,a as p}from"../chunks/1dA-0W7R.js";import{f as i,c as l,r as f,s as c}from"../chunks/b5G7TVJy.js";import{s as m}from"../chunks/dHhEJQgK.js";import{t as d,f as h}from"../chunks/CNYRFcf3.js";var b=n(`<span class="absolute top-0 left-0 p-8 text-sm z-1"><a href="/home" class="duration-200 rounded-selector shadow-xl cursor-pointer
         hover:-translate-y-px active:translate-y-px hover:bg-base-200
         bg-base-100 text-base-content hover:text-secondary hover:border-secondary border-2 border-transparent
         p-2 pl-4 pr-4 flex flex-row gap-2 items-center"><i class="nf nf-fa-arrow_circle_left"></i> Back to Home</a></span> <!>`,1);function g(e,t){var a=b(),r=i(a),o=l(r);f(r);var s=c(r,2);m(s,()=>t.children),d(3,o,()=>h,()=>({y:-10,duration:500})),p(e,a)}export{g as component};
