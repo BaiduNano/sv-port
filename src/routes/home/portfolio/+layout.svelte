@@ -13,7 +13,7 @@
         transition:fly={{ y: -10, duration: 500 }}
     >
         <i class="nf nf-fa-arrow_circle_left"></i>
-        Back to Home
+        <p class="hidden sm:inline">Back to Home</p>
     </a>
 </span>
 

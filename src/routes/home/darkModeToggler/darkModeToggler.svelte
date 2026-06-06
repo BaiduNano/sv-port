@@ -26,6 +26,6 @@
 <span class="absolute top-0 right-0 p-8 text-sm z-1">
     <Button onclick={toggleTheme} small={true} primary={false}>
         <i class="nf {isDark ? 'nf-fa-moon' : 'nf-oct-sun'}"></i>
-        <p>{isDark ? "Dark" : "Light"} Mode</p>
+        <p class="hidden sm:inline">{isDark ? "Dark" : "Light"} Mode</p>
     </Button>
 </span>
