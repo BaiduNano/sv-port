@@ -9,10 +9,12 @@
     let {
         portfolioItems,
         onItemClick,
-    }: {
+        almostSquare = $bindable(false),
+    } = $props<{
         portfolioItems: PortfolioItem[];
         onItemClick: (index: number) => void;
-    } = $props();
+        almostSquare: boolean;
+    }>();
 
     let scrollContainer: HTMLElement | null = null;
     let innerWidth = $state(0);
@@ -84,6 +86,9 @@
     onMount(() => {
         visible = true;
     });
+    $effect(() => {
+        almostSquare = isSquareIsh;
+    });
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight />
@@ -129,6 +134,7 @@
                            {loadedImages[item.id]
                         ? 'opacity-100'
                         : 'opacity-0'}"
+                    style="object-position: {item.center || 'center'};"
                 />
 
                 <div
@@ -154,13 +160,13 @@
         primary={false}
         roundedFull={true}
         class="absolute z-20 p-7
-                {isPortrait
+            {isPortrait
             ? i === 0
-                ? 'top-18'
-                : 'bottom-0'
+                ? 'top-18 left-1/2 -translate-x-1/2'
+                : 'bottom-0 left-1/2 -translate-x-1/2'
             : i === 0
-              ? 'left-8'
-              : 'right-8'}"
+              ? 'left-8 top-1/2'
+              : 'right-8 top-1/2'}"
         onclick={() => scroll(i === 1)}
         aria-label={i === 1 ? "Scroll next" : "Scroll previous"}
     >

@@ -1,18 +1,19 @@
-<!-- Warning: This is a modified AI slop code -->
-
 <script lang="ts">
     import { fade, scale, fly } from "svelte/transition";
     import { darkMode } from "$lib/store/store";
     import { type PortfolioItem } from "$lib/types/types";
     import Button from "./button.svelte";
     import Particles from "./particles.svelte";
+    import SpinningAnim from "$lib/components/spinningAnim.svelte";
 
     let {
         items = [],
+        almostSquare = $bindable(false),
         currentIndex = $bindable(0),
         onClose,
     } = $props<{
         items: PortfolioItem[];
+        almostSquare?: boolean;
         currentIndex?: number;
         onClose?: () => void;
     }>();
@@ -21,7 +22,6 @@
     let panX = $state(0);
     let panY = $state(0);
     let isDragging = $state(false);
-    let isDownloading = $state(false);
 
     let isWidthLimited = $state(false);
     let isAssetLoaded = $state(false);
@@ -29,12 +29,19 @@
 
     let startX = 0;
     let startY = 0;
+
+    // Pinch to zoom state variables
     let startTouchDist = 0;
     let initialTouchScale = 1;
+    let initialPanX = 0;
+    let initialPanY = 0;
+    let initialFocalX = 0;
+    let initialFocalY = 0;
 
-    const currentItem = $derived(items[currentIndex] || null);
+    const currentItem = $derived<PortfolioItem | null>(
+        items[currentIndex] || null,
+    );
 
-    // Computes which edge hits the container boundary first
     const updateSizingConstraint = () => {
         if (!imgRef || !imgRef.parentElement) return;
 
@@ -52,15 +59,34 @@
     };
 
     /* -----------------------------------------
-	   MOUSE MECHANICS
-	----------------------------------------- */
+           MOUSE MECHANICS
+        ----------------------------------------- */
     const handleWheel = (e: WheelEvent) => {
         e.preventDefault();
-        const zoomFactor = 0.15;
+        if (!imgRef || !imgRef.parentElement) return;
+
+        const container = imgRef.parentElement;
+        const rect = container.getBoundingClientRect();
+
+        // Find the cursor position relative to the container's center
+        const mouseX = e.clientX - rect.left - rect.width / 2;
+        const mouseY = e.clientY - rect.top - rect.height / 2;
+
+        // Use a multiplier instead of fixed addition for consistent zoom speed
+        const zoomMultiplier = 1.15;
+        const oldScale = scaleFactor;
+        let newScale = oldScale;
+
         if (e.deltaY < 0) {
-            scaleFactor = Math.min(scaleFactor + zoomFactor, 6);
+            newScale = Math.min(oldScale * zoomMultiplier, 6);
         } else {
-            scaleFactor = Math.max(scaleFactor - zoomFactor, 0.5);
+            newScale = Math.max(oldScale / zoomMultiplier, 0.5);
+        }
+
+        if (newScale !== oldScale) {
+            panX = mouseX - (newScale / oldScale) * (mouseX - panX);
+            panY = mouseY - (newScale / oldScale) * (mouseY - panY);
+            scaleFactor = newScale;
         }
     };
 
@@ -83,12 +109,19 @@
     };
 
     /* -----------------------------------------
-	   TOUCH MECHANICS
-	----------------------------------------- */
+       TOUCH MECHANICS
+    ----------------------------------------- */
     const getTouchDistance = (touches: TouchList) => {
         const dx = touches[0].clientX - touches[1].clientX;
         const dy = touches[0].clientY - touches[1].clientY;
         return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    const getTouchCenter = (touches: TouchList) => {
+        return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2,
+        };
     };
 
     const handleTouchStart = (e: TouchEvent) => {
@@ -100,6 +133,17 @@
             isDragging = false;
             startTouchDist = getTouchDistance(e.touches);
             initialTouchScale = scaleFactor;
+
+            // Track initial focal point and pan so we can offset correctly as scale shifts
+            if (imgRef && imgRef.parentElement) {
+                const rect = imgRef.parentElement.getBoundingClientRect();
+                const center = getTouchCenter(e.touches);
+
+                initialFocalX = center.x - rect.left - rect.width / 2;
+                initialFocalY = center.y - rect.top - rect.height / 2;
+                initialPanX = panX;
+                initialPanY = panY;
+            }
         }
     };
 
@@ -110,10 +154,36 @@
         } else if (e.touches.length === 2 && startTouchDist > 0) {
             const currentDist = getTouchDistance(e.touches);
             const scaleRatio = currentDist / startTouchDist;
-            scaleFactor = Math.min(
+            const newScale = Math.min(
                 Math.max(initialTouchScale * scaleRatio, 0.5),
                 6,
             );
+
+            if (imgRef && imgRef.parentElement) {
+                const rect = imgRef.parentElement.getBoundingClientRect();
+                const center = getTouchCenter(e.touches);
+                const currentFocalX = center.x - rect.left - rect.width / 2;
+                const currentFocalY = center.y - rect.top - rect.height / 2;
+
+                // Adjust pan to zoom towards the original pinch center
+                let newPanX =
+                    initialFocalX -
+                    (newScale / initialTouchScale) *
+                        (initialFocalX - initialPanX);
+                let newPanY =
+                    initialFocalY -
+                    (newScale / initialTouchScale) *
+                        (initialFocalY - initialPanY);
+
+                // Add any user drift (panning while keeping two fingers down)
+                newPanX += currentFocalX - initialFocalX;
+                newPanY += currentFocalY - initialFocalY;
+
+                panX = newPanX;
+                panY = newPanY;
+            }
+
+            scaleFactor = newScale;
         }
     };
 
@@ -129,8 +199,8 @@
     };
 
     /* -----------------------------------------
-	   GENERAL CONTROL HANDLERS
-	----------------------------------------- */
+       GENERAL CONTROL HANDLERS
+    ----------------------------------------- */
     const next = () => {
         if (items.length <= 1) return;
         currentIndex = (currentIndex + 1) % items.length;
@@ -142,6 +212,7 @@
         currentIndex = (currentIndex - 1 + items.length) % items.length;
         resetTransforms();
     };
+
     const shuffle = (isNext: boolean = false) => {
         if (isNext) next();
         else prev();
@@ -156,25 +227,22 @@
     };
 
     const downloadImage = async (url: string, title: string) => {
-        if (isDownloading) return;
-        isDownloading = true;
         try {
-            const cleanUrl = url.split("?")[0];
-            const response = await fetch(cleanUrl);
+            const response = await fetch(url);
             const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
+            const extension =
+                blob.type.split("/")[1] ||
+                url.split(".").pop()?.split("?")[0] ||
+                "jpg";
+            const safeTitle = title.toLowerCase().replace(/[^a-z0-9]/g, "_");
             const link = document.createElement("a");
-            link.href = blobUrl;
-            link.download = `${title.toLowerCase().replace(/[^a-z0-9]/g, "_")}.webp`;
-            document.body.appendChild(link);
+            link.href = URL.createObjectURL(blob);
+            link.download = `${safeTitle}.${extension}`;
             link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(blobUrl);
+            URL.revokeObjectURL(link.href);
         } catch (error) {
             console.error("Direct download failed:", error);
             window.open(url, "_blank");
-        } finally {
-            isDownloading = false;
         }
     };
 </script>
@@ -227,17 +295,26 @@
                 ontouchcancel={handleTouchEnd}
                 ondblclick={resetTransforms}
             >
+                {#if !isAssetLoaded}
+                    <div
+                        class="absolute inset-0 flex items-center justify-center pointer-events-none"
+                        transition:fly={{ y: -50, duration: 300 }}
+                    >
+                        <SpinningAnim />
+                    </div>
+                {/if}
+
                 {#key currentIndex}
                     <img
                         src={currentItem.image_url}
                         alt={currentItem.title}
                         draggable="false"
                         onload={handleImageLoad}
-                        in:fade={{ duration: 250, delay: 150 }}
                         out:fade={{ duration: 150 }}
-                        class="absolute object-contain pointer-events-none will-change-transform transition-opacity duration-150
-							   {isAssetLoaded ? 'opacity-100' : 'opacity-0'}
-							   {isWidthLimited ? 'w-full h-auto max-h-none' : 'h-full w-auto max-w-none'}"
+                        class="absolute object-contain pointer-events-none will-change-transform
+                               {isWidthLimited
+                            ? 'w-full h-auto max-h-none'
+                            : 'h-full w-auto max-w-none'}"
                         style="transform: translate({panX}px, {panY}px) scale({scaleFactor}); transition: transform {isDragging
                             ? '0s'
                             : '0.2s'} ease-out;"
@@ -245,7 +322,7 @@
                 {/key}
             </div>
 
-            {#if items.length > 1}
+            {#if items.length > 1 && !almostSquare}
                 {#each [0, 1] as i}
                     <Button
                         onclick={() => shuffle(i === 1)}
@@ -253,7 +330,7 @@
                         primary={false}
                         small={true}
                         class="absolute top-1/2 -translate-y-1/2 z-40 pointer-events-auto p-7
-				   {i === 0 ? 'left-4' : 'right-4'}"
+                   {i === 0 ? 'left-4' : 'right-4'}"
                         ><i
                             class="text-2xl nf {i === 0
                                 ? 'nf-fa-circle_arrow_left'
@@ -298,25 +375,34 @@
                         </p>
                     </div>
                 {/key}
+                <div
+                    class="absolute bottom-6 right-6 pointer-events-auto z-20 flex flex-col items-end sm:flex-row gap-2"
+                >
+                    {#if currentItem.externals}
+                        {#each Object.entries(currentItem.externals) as [social, url]}
+                            <Button
+                                onclick={() => window.open(url, "_blank")}
+                                primary={false}
+                            >
+                                <i
+                                    class="text-xl nf {social === 'pixiv'
+                                        ? 'icon-pixiv'
+                                        : 'nf-cod-twitter'}"
+                                ></i>
+                            </Button>
+                        {/each}
+                    {/if}
 
-                <div class="absolute bottom-6 right-6 pointer-events-auto z-20">
                     <Button
                         onclick={() =>
                             downloadImage(
                                 currentItem.image_url,
                                 currentItem.title,
                             )}
-                        disabled={isDownloading}
                         primary={false}
                     >
-                        {#if isDownloading}
-                            <i class="nf nf-md-check_circle"></i>
-                        {:else}
-                            <i class="nf nf-oct-download"></i>
-                        {/if}
-                        <span class="hidden sm:inline"
-                            >{isDownloading ? "Saving..." : "Download"}</span
-                        >
+                        <i class="nf nf-oct-download"></i>
+                        <span class="hidden sm:inline">Download</span>
                     </Button>
                 </div>
             </div>

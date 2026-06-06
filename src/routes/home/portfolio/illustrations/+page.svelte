@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { navigating } from "$app/stores";
     import { supabase } from "$lib/supabase/supabase";
-    import { fade } from "svelte/transition";
+    import { fade, fly } from "svelte/transition";
 
     import type { PortfolioItem } from "$lib/types/types";
     import ImageGrid from "$lib/components/imageGrid.svelte";
@@ -14,6 +14,7 @@
     let errorMessage = $state<string | null>(null);
     let visible = $state(false);
     let previewIndex = $state(-1);
+    let almostSquare = $state(false);
 
     let optimizedItems = $derived(
         portfolioItems.map((item) => {
@@ -24,7 +25,7 @@
             return {
                 ...item,
                 image_url: isSupabaseStorage
-                    ? `${item.image_url}?width=600&quality=80&format=webp`
+                    ? `${item.image_url}?width=600&quality=30&format=webp`
                     : item.image_url,
             };
         }),
@@ -35,7 +36,8 @@
         try {
             const { data, error } = await supabase
                 .from("portfolio")
-                .select("*");
+                .select("*")
+                .order("id", { ascending: true });
             if (error) throw error;
             portfolioItems = (data as PortfolioItem[]) || [];
         } catch (err: any) {
@@ -62,15 +64,19 @@
         {#if isLoading}
             <div class="w-full h-full flex items-center justify-center z-10">
                 <SpinningAnim />
+                <p1>Loading</p1>
             </div>
         {:else if errorMessage}
             <h1>Whoops, something went wrong.</h1>
             <p class="text-error">{errorMessage}</p>
         {:else}
-            <ImageGrid
-                portfolioItems={optimizedItems}
-                onItemClick={(index) => (previewIndex = index)}
-            />
+            <div class="w-full h-full">
+                <ImageGrid
+                    bind:almostSquare
+                    portfolioItems={optimizedItems}
+                    onItemClick={(index) => (previewIndex = index)}
+                />
+            </div>
         {/if}
     </div>
 {/if}
@@ -79,6 +85,7 @@
     <ImagePreviewer
         items={portfolioItems}
         bind:currentIndex={previewIndex}
+        bind:almostSquare
         onClose={() => (previewIndex = -1)}
     />
 {/if}
