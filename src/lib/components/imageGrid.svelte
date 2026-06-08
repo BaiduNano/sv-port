@@ -32,7 +32,7 @@
     );
 
     const cardClass =
-        "absolute inset-0 w-full h-full object-cover ease-in-out rounded-box duration-200 group-hover:scale-99 pointer-events-none";
+        "absolute inset-0 w-full h-full object-cover ease-in-out rounded-box duration-200 pointer-events-none";
 
     const getScrollStep = (): { x: number; y: number } => {
         const firstChild = scrollContainer?.firstElementChild as HTMLElement;
@@ -117,7 +117,7 @@
             >
                 {#if !loadedImages[item.id]}
                     <div
-                        class="absolute inset-0 flex items-center justify-center bg-base-100 animate-pulse z-10"
+                        class="absolute inset-0 flex items-center justify-center bg-base-100 animate-pulse z-100"
                     >
                         <SpinningAnim />
                     </div>
@@ -130,25 +130,28 @@
                     loading={index < itemsToShow ? "eager" : "lazy"}
                     decoding="async"
                     onload={() => (loadedImages[item.id] = true)}
-                    class="{cardClass}
-                           {loadedImages[item.id]
-                        ? 'opacity-100'
-                        : 'opacity-0'}"
+                    class="{cardClass} z-10 {loadedImages[item.id]
+                        ? 'group-hover:scale-99'
+                        : ''}"
                     style="object-position: {item.center || 'center'};"
                 />
 
-                <div
-                    class="{cardClass} bg-[#0000001a] group-hover:scale-99 group-hover:bg-transparent flex flex-col p-4"
-                >
-                    <span
-                        class="shadow-sm bg-[#0000005a] backdrop-blur-lg text-white w-fit px-4 py-2 rounded-lg inline-flex flex-row gap-2 items-center opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"
+                {#if loadedImages[item.id]}
+                    <div
+                        class="{cardClass} {loadedImages[item.id]
+                            ? 'group-hover:scale-99'
+                            : ''} flex flex-col p-4 z-20"
                     >
-                        <i class="text-xl nf nf-fa-paint_brush"></i>
-                        <p class="text-xl pointer-events-none m-0">
-                            {item.title}
-                        </p>
-                    </span>
-                </div>
+                        <span
+                            class="shadow-sm bg-[#0000005a] backdrop-blur-lg text-white w-fit px-4 py-2 rounded-box inline-flex flex-row gap-2 items-center opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"
+                        >
+                            <i class="nf nf-fa-paint_brush"></i>
+                            <p class="pointer-events-none m-0">
+                                {item.title}
+                            </p>
+                        </span>
+                    </div>
+                {/if}
             </a>
         {/if}
     {/each}
