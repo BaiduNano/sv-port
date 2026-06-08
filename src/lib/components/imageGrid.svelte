@@ -117,7 +117,7 @@
             >
                 {#if !loadedImages[item.id]}
                     <div
-                        class="absolute inset-0 flex items-center justify-center bg-base-100 animate-pulse z-100"
+                        class="absolute inset-0 flex items-center justify-center bg-base-100 animate-pulse z-20"
                     >
                         <SpinningAnim />
                     </div>
