@@ -1,0 +1,4 @@
+import"../chunks/DsnmJJEf.js";import{f as n,c as i,r as p,s as l}from"../chunks/CkG5AfhK.js";import{f as c,a as f}from"../chunks/CF2LBi36.js";import{s as m}from"../chunks/C_sLPRj0.js";import{t as d,f as h}from"../chunks/BTwxADaQ.js";var b=c(`<span class="absolute top-0 left-0 p-8 text-sm z-1"><a href="/home" class="duration-200 rounded-selector shadow-xl cursor-pointer
+        hover:-translate-y-px active:translate-y-px hover:bg-base-200
+        bg-base-100 text-base-content hover:text-secondary hover:border-secondary border-2 border-transparent
+        p-2 pl-4 pr-4 flex flex-row gap-2 items-center"><i class="nf nf-fa-arrow_circle_left"></i> <p class="hidden sm:inline">Back to Home</p></a></span> <!>`,1);function _(e,t){var a=b(),r=n(a),o=i(r);p(r);var s=l(r,2);m(s,()=>t.children),d(3,o,()=>h,()=>({y:-10,duration:500})),f(e,a)}export{_ as component};
