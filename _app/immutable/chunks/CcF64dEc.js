@@ -1,0 +1,1 @@
+import"./DsnmJJEf.js";import"./-84YP_YI.js";import{f as o,a as i}from"./UVXHXBxm.js";var t=o('<div class="absolute inset-0 m-auto h-7 w-7 border-2 border-primary border-t-transparent rounded-full animate-spin opacity-50"></div>');function m(r){var a=t();i(r,a)}export{m as S};
