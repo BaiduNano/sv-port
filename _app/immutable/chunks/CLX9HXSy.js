@@ -1,1 +1,0 @@
-import{s as t}from"./BPEtdVvy.js";const e=()=>{const s=t;return{page:{subscribe:s.page.subscribe},navigating:{subscribe:s.navigating.subscribe},updated:s.updated}},n={subscribe(s){return e().navigating.subscribe(s)}};export{n};
